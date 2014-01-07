@@ -1,29 +1,30 @@
-# Adapter::Moneta
+# adapter-moneta
+This is a simple bridge between [https://github.com/jnunemaker/adapter](https://github.com/jnunemaker/adapter) and [https://github.com/minad/moneta](https://github.com/minad/moneta). 
 
-TODO: Write a gem description
+__WHY?__ you might ask!
+[Adapter](https://github.com/jnunemaker/adapter) is the basis of [Toystore](https://github.com/jnunemaker/toystore), [Moneta](https://github.com/minad/moneta) has far more backends defined.
 
-## Installation
+For example, we can then do:
+```
+require 'pp'
+require 'adapter/moneta'
+require 'toystore'
+# must also have the sqlite3 gem for moneta
 
-Add this line to your application's Gemfile:
+class User
+  include Toy::Store
+  adapter :moneta, Moneta.new(:Sqlite, :file => 'db/kv.sqlite3')
 
-    gem 'adapter-moneta'
+  attribute :name, String
+end
 
-And then execute:
+ids = []
 
-    $ bundle
+user = User.create(:name => 'John')
 
-Or install it yourself as:
+pp user
+pp User.read(user.id)
 
-    $ gem install adapter-moneta
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+user.destroy
+pp User.read(user.id)
+```
